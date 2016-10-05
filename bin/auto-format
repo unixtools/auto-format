@@ -1,0 +1,39 @@
+#!/usr/bin/perl
+
+use Getopt::Long;
+use File::Type;
+my $hint;
+my $help;
+my $debug;
+
+my $res = GetOptions( "h|help+" => \$help, "hint=s" => \$hint, "debug+" => \$debug );
+
+my $ppid = getppid;
+open( my $in, "/proc/$ppid/cmdline" );
+print STDERR <$in>;
+close($in);
+
+if (0) {
+    foreach my $k ( sort( keys(%ENV) ) ) {
+        print STDERR $k, ": ", $ENV{$k}, "\n";
+    }
+    print STDERR "\n\n";
+}
+
+my $lang = "";
+
+# Should modify to handle list of files on cmd line as well
+my $content = join( "", <STDIN> );
+
+# Foreach file - write to a temp file, then make guess at file type
+# using file utiliity to feed into the formatting method
+
+my $mm  = new File::Type->new();
+my $res = $mm->checktype_contents($content);
+print STDERR "Res: $res\n";
+
+print STDERR "Hint: <$hint>\n";
+
+print $content;
+exit(0);
+
