@@ -2,11 +2,21 @@
 
 use Getopt::Long;
 use File::Type;
+
 my $hint;
 my $help;
 my $debug;
+my $force;
+my $inplace;
 
-my $res = GetOptions( "h|help+" => \$help, "hint=s" => \$hint, "debug+" => \$debug );
+my $res = GetOptions( "h|help+" => \$help, "hint=s" => \$hint, "debug+" => \$debug, "force+" => \$force,
+	"inplace+" => \$inplace );
+if ( ! $res )
+{
+	print "Usage: $0 [--hint filename-or-other-keywords] [--debug] [--help] [--force] [--inplace] [file ...]\n";
+	print "  --force will keep results even if it errors out\n";
+	exit(1);
+}
 
 my $ppid = getppid;
 open( my $in, "/proc/$ppid/cmdline" );
@@ -21,6 +31,13 @@ if (0) {
 }
 
 my $lang = "";
+
+# Possible Tools
+# perltidy
+# json_reformat / jsonpp / inline
+# yaml???
+# astyle - c++
+# indent - c
 
 # Should modify to handle list of files on cmd line as well
 my $content = join( "", <STDIN> );
